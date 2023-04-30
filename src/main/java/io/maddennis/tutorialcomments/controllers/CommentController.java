@@ -22,7 +22,7 @@ public class CommentController {
     @Autowired
     private CommentRepository commentRepository;
 
-    @GetMapping("/tutorials/{tutorialId}/comments")
+    @GetMapping(path = "/tutorials/{tutorialId}/comments", produces = "application/json")
     public ResponseEntity<List<Comment>> getAllCommentsByTutorialId(@PathVariable(value = "tutorialId") Long tutorialId) {
         if (!tutorialRepository.existsById(tutorialId)) {
             throw new ResourceNotFoundException("Not found Tutorial with id = " + tutorialId);
@@ -32,7 +32,7 @@ public class CommentController {
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
-    @GetMapping("/comments/{id}")
+    @GetMapping(path = "/comments/{id}", produces = "application/json")
     public ResponseEntity<Comment> getCommentsByTutorialId(@PathVariable(value = "id") Long id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found Comment with id = " + id));
@@ -40,7 +40,7 @@ public class CommentController {
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
-    @PostMapping("/tutorials/{tutorialId}/comments")
+    @PostMapping(path = "/tutorials/{tutorialId}/comments", produces = "application/json")
     public ResponseEntity<Comment> createComment(@PathVariable(value = "tutorialId") Long tutorialId,
                                                  @RequestBody Comment commentRequest) {
         Comment comment = tutorialRepository.findById(tutorialId).map(tutorial -> {
@@ -51,7 +51,7 @@ public class CommentController {
         return new ResponseEntity<>(comment, HttpStatus.CREATED);
     }
 
-    @PutMapping("/comments/{id}")
+    @PutMapping(path = "/comments/{id}", produces = "application/json")
     public ResponseEntity<Comment> updateComment(@PathVariable("id") long id, @RequestBody Comment commentRequest) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("CommentId " + id + "not found"));
@@ -61,14 +61,14 @@ public class CommentController {
         return new ResponseEntity<>(commentRepository.save(comment), HttpStatus.OK);
     }
 
-    @DeleteMapping("/comments/{id}")
+    @DeleteMapping(path = "/comments/{id}", produces = "application/json")
     public ResponseEntity<HttpStatus> deleteComment(@PathVariable("id") long id) {
         commentRepository.deleteById(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/tutorials/{tutorialId}/comments")
+    @DeleteMapping(path = "/tutorials/{tutorialId}/comments", produces = "application/json")
     public ResponseEntity<List<Comment>> deleteAllCommentsOfTutorial(@PathVariable(value = "tutorialId") Long tutorialId) {
         if (!tutorialRepository.existsById(tutorialId)) {
             throw new ResourceNotFoundException("Not found Tutorial with id = " + tutorialId);
